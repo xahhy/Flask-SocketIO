@@ -6,12 +6,34 @@
     <script src="js/socket.io.js"></script>
     <script src="js/js.cookie.min.js"></script>
     <script src="js/jquery-1.11.3.min.js"></script>
+    <style>
+        .circle-red {
+            width: 20px !important;
+            height: 20px !important;
+            background-color: red;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .circle-green {
+            width: 20px;
+            height: 20px;
+            background-color: green;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
 </head>
 <div>
     <h1 id="user_id"></h1>
     <button id="btn_connect">connect</button>
     <button id="btn_disconnect">disconnect</button>
     <button id="btn_clear_cookie">clear cookie</button>
+    <div id="signal" class=""></div>
 </div>
 <script>
     var socket;
@@ -37,6 +59,18 @@
             }
         });
     }
+
+    function set_connection_signal() {
+        if (socket.connected) {
+            $('#signal').removeClass('circle-red');
+            $('#signal').addClass('circle-green')
+        } else {
+            $('#signal').removeClass('circle-green');
+            $('#signal').addClass('circle-red')
+        }
+        setTimeout("set_connection_signal()", 1000);
+    }
+
     set_socket();
     //socket.connect();
 
@@ -52,6 +86,7 @@
     $('#btn_clear_cookie').click(function () {
         Cookies.remove('user_id')
     });
+    set_connection_signal();
 </script>
 <body>
 
