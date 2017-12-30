@@ -1,37 +1,76 @@
 import time
-from flask import Flask, render_template, make_response
+from flask import Flask, render_template, make_response, request
 from flask_socketio import SocketIO, emit
 import threading
 from flask_cors import CORS
+import uuid
+import logging
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 CORS(app)
 socketio = SocketIO(app)
 ClientNumber = 0
+Users = {}
+Sid_User_Map={}
 
 
 @socketio.on('connect', namespace='/user')
 def test_connect():
     global ClientNumber
-    ClientNumber += 1
-    # emit('my response', {'data': 'Connected'})
-    print('connected')
+    user_id = request.args.get('user_id')
+    sid = request.sid
+    logging.debug('Connected. user_id=%s sid=%s'%(user_id, sid))
+    if user_id:
+        sessions = Users.get(user_id)
+        if not sessions:
+            sessions = Users[user_id] = {sid}
+            ClientNumber += 1
+            logging.debug('Old User. New Connection! Online %s'%ClientNumber)
+        else:
+            logging.debug('Old User. Connect Again!')
+        sessions.add(sid)
+    else:
+        user_id = str(uuid.uuid1())
+        emit('user_id', {'user_id': user_id})
+        Users[user_id] = {sid}
+        ClientNumber += 1
+        logging.debug('New User! user_id=%s Online %s'%(user_id, ClientNumber))
+    Sid_User_Map[sid] = user_id
+    print('connected', user_id)
+
 
 @socketio.on('disconnect', namespace='/user')
 def test_disconnect():
     global ClientNumber
-    ClientNumber -= 1
-    if ClientNumber < 0: ClientNumber = 0
+    sid = request.sid
+    user_id = Sid_User_Map[sid]
+    sessions = Users[user_id]
+    sessions.remove(sid)
+    if not sessions:
+        ClientNumber -= 1
+        if ClientNumber < 0: ClientNumber = 0
+        logging.debug('user_id=%s disconnected. Online %s'%(user_id, ClientNumber))
+
     print('Client disconnected')
 
-@socketio.on_error_default  # handles all namespaces without an explicit error handler
-def default_error_handler(e):
-    print('Found A Error',str(e))
+
+@socketio.on('users', namespace='/admin')
+def test_users():
+    global ClientNumber
+    emit('users', ClientNumber,broadcast=True)
+# @socketio.on_error_default  # handles all namespaces without an explicit error handler
+# def default_error_handler(e):
+#     print('Found A Error', str(e))
+
 
 def loop():
-    time.sleep(1)
-    loop()
+    global ClientNumber
+    while True:
+        socketio.emit('users', ClientNumber, namespace='/admin')
+        time.sleep(1)
+
 
 
 @app.route('/clients')
@@ -39,8 +78,9 @@ def get_client_number():
     global ClientNumber
     return make_response(str(ClientNumber))
 
+
 if __name__ == '__main__':
     t = threading.Thread(target=loop)
     t.setDaemon(True)
     t.start()
-    socketio.run(app,debug=True)
+    socketio.run(app, debug=False)

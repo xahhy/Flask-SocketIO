@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SocketIO</title>
+    <script src="js/socket.io.js"></script>
+    <script src="js/js.cookie.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>
+</head>
+<div>
+    <button id="btn_connect">connect</button>
+    <button id="btn_disconnect">disconnect</button>
+    <h1 id="client_number">0</h1>
+</div>
+<script>
+    var socket;
+    var URL = 'http://127.0.0.1:5000';
+    socket = io(URL + '/admin');
+    socket.connect();
+
+    $('#btn_connect').click(function () {
+        socket.connect();
+        console.log('connect!')
+    });
+    $('#btn_disconnect').click(function () {
+        socket.disconnect();
+        console.log('disconnect!')
+    });
+    socket.on('users', function (data) {
+        console.log(data);
+        $('#client_number').html(data);
+    })
+</script>
+<body>
+
+</body>
+</html>
