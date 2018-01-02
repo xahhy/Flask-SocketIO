@@ -3,90 +3,85 @@
 <head>
     <meta charset="utf-8">
     <title>SocketIO</title>
-    <script src="js/socket.io.js"></script>
-    <script src="js/js.cookie.min.js"></script>
-    <script src="js/jquery-1.11.3.min.js"></script>
+    <!--<script src="js/jquery-1.11.3.min.js"></script>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="flat-ui/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="flat-ui/css/flat-ui.css" rel="stylesheet">
+
+    <link rel="shortcut icon" href="flat-ui/img/favicon.ico">
     <style>
-        .circle-red {
-            width: 20px !important;
-            height: 20px !important;
-            background-color: red;
-            -webkit-border-radius: 50%;
-            -moz-border-radius: 50%;
-            border-radius: 50%;
-            display: inline-block;
+        .m-input-area {
+            position: fixed;
+            bottom: 0;
         }
 
-        .circle-green {
-            width: 20px;
-            height: 20px;
-            background-color: green;
-            -webkit-border-radius: 50%;
-            -moz-border-radius: 50%;
-            border-radius: 50%;
+        .m-message-area {
+            padding: 100px 0 50px 0;
+        }
+
+        .m-connect-switch {
+            padding: 10px;
+        }
+
+        .navbar >div {
+            float: none;
             display: inline-block;
+        }
+        .m-user-number {
+            color: orange;
         }
     </style>
 </head>
 <div>
-    <h1 id="user_id"></h1>
-    <button id="btn_connect">connect</button>
-    <button id="btn_disconnect">disconnect</button>
-    <button id="btn_clear_cookie">clear cookie</button>
-    <div id="signal" class=""></div>
+    <!--<h1 id="user_id"></h1>-->
+    <!--<button id="btn_connect">connect</button>-->
+    <!--<button id="btn_disconnect">disconnect</button>-->
+    <!--<button id="btn_clear_cookie">clear cookie</button>-->
+    <!--<div id="signal" class=""></div>-->
+    <nav class="navbar navbar-default navbar-fixed-top text-center" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+                <span class="sr-only">Toggle navigation</span>
+            </button>
+            <a class="navbar-brand" href="#">陌陌</a>
+        </div>
+        <div class="navbar-header text-center">
+            <p class="navbar-text">在线人数 <span class="m-user-number">0</span></p>
+        </div>
+        <div class="m-connect-switch pull-right"><input type="checkbox" checked data-toggle="switch"
+                                                        id="id_connect_switch"
+                                                        data-on-color="success" data-off-color="danger"
+                                                        data-on-text="<span class='fui-check'></span>"
+                                                        data-off-text="<span class='fui-cross'></span>"/></div>
+    </nav><!-- /navbar -->
+    <div class="container m-message-area">
+        <div class="alert alert-success" role="alert">...</div>
+        <div class="alert alert-info" role="alert">...</div>
+        <div class="alert alert-warning" role="alert">...</div>
+    </div>
+    <div class="input-group m-input-area" id="id_message">
+        <input type="text" class="form-control" placeholder="随便说说~" id="search-query-3">
+        <span class="input-group-btn">
+        <button type="submit" class="btn"><span class="fui-chat"></span></button></span>
+    </div>
 </div>
+<script src="flat-ui/js/vendor/jquery.min.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/js.cookie.min.js"></script>
+<script src="flat-ui/js/flat-ui.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!--<script src="flat-ui/js/vendor/video.js"></script>-->
+<script src="js/app.js"></script>
 <script>
-    var socket;
-    var URL = 'http://127.0.0.1:5000';
-
-    function set_socket() {
-        var userId = Cookies.get('user_id');
-        if (userId) {
-            socket = io(URL + '/user', {
-                query: {
-                    user_id: userId
-                }
-            });
-            $('#user_id').html(userId)
-        } else {
-            socket = io(URL + '/user');
-        }
-        socket.on('user_id', function (data) {
-            console.log(data['user_id']);
-            if (data['user_id']) {
-                Cookies.set('user_id', data['user_id']);
-                $('#user_id').html(data['user_id']);
-            }
-        });
+    // Switches
+    if ($('[data-toggle="switch"]').length) {
+        $('[data-toggle="switch"]').bootstrapSwitch();
     }
-
-    function set_connection_signal() {
-        if (socket.connected) {
-            $('#signal').removeClass('circle-red');
-            $('#signal').addClass('circle-green')
-        } else {
-            $('#signal').removeClass('circle-green');
-            $('#signal').addClass('circle-red')
-        }
-        setTimeout("set_connection_signal()", 1000);
-    }
-
-    set_socket();
-    //socket.connect();
-
-    $('#btn_connect').click(function () {
-        set_socket();
-        socket.connect();
-        console.log('connect!')
-    });
-    $('#btn_disconnect').click(function () {
-        socket.disconnect();
-        console.log('disconnect!')
-    });
-    $('#btn_clear_cookie').click(function () {
-        Cookies.remove('user_id')
-    });
-    set_connection_signal();
 </script>
 <body>
 

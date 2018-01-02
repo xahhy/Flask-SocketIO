@@ -13,7 +13,7 @@ socketio = SocketIO(app)
 ClientNumber = 0
 Users = {}
 Sid_User_Map = {}
-
+logging.basicConfig(level=logging.ERROR)
 
 @socketio.on('connect', namespace='/user')
 def test_connect():
@@ -65,6 +65,11 @@ def test_users():
 # @socketio.on_error_default  # handles all namespaces without an explicit error handler
 # def default_error_handler(e):
 #     print('Found A Error', str(e))
+@socketio.on('message', namespace='/user')
+def receive_message(json:dict):
+    message = json.get('data')
+    if message:
+        emit('message',json,broadcast=True)
 
 
 def loop():
