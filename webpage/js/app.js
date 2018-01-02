@@ -1,6 +1,8 @@
 var socket;
 var URL = 'http://127.0.0.1:5000';
 var $inputMessage = $('.m-input-area>input');
+var $html = $("html");
+
 function set_socket() {
     var userId = Cookies.get('user_id');
     if (userId) {
@@ -28,6 +30,7 @@ function set_socket() {
         console.log('收到消息:'+ msg);
         var $msg = $('<div class="alert alert-success" role="alert">'+msg+'</div>');
         $('.m-message-area').append($msg);
+        $html.animate({scrollTop: $html.height()},200);
     });
 }
 function set_admin_socket() {
