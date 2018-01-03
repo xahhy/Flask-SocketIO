@@ -87,6 +87,13 @@ set_admin_socket();
 //socket.connect();
 function sendMessage() {
     var message = $inputMessage.val();
+    if(message===''){
+        $content.html('<div class="card">\n' +
+            '                <div class="card-content color-success">\n' +
+            '                    <div class="card-content-inner text-center">欢迎来到闪聊 ( ゜- ゜)つロ<br/>思沃大讲堂专用</div>\n' +
+            '                </div>\n' +
+            '            </div>');
+    }
     $inputMessage.val('');
     socket.emit('message', {data: message});
     console.log(message);
