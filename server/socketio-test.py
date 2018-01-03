@@ -13,7 +13,7 @@ socketio = SocketIO(app)
 ClientNumber = 0
 Users = {}
 Sid_User_Map = {}
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 
 @socketio.on('connect', namespace='/user')
 def test_connect():
@@ -89,4 +89,4 @@ if __name__ == '__main__':
     t = threading.Thread(target=loop)
     t.setDaemon(True)
     t.start()
-    socketio.run(app, debug=False)
+    socketio.run(app,host='0.0.0.0', debug=False)

@@ -1,9 +1,9 @@
 var socket;
-var URL = 'http://127.0.0.1:5000';
+var URL = 'http://192.168.0.145:5000';
 var $inputMessage = $('#id_message_input').find('input');
 var $inputMessageBtn = $('#id_message_input').find('.button');
 var $html = $("html");
-var $connectSwitch = $('.label-switch').find('input');
+var $connectSwitch = $('.label-switch');
 var $connectSwitchTitle = $('.m-connect-switch > .item-title');
 var $content = $('.content');
 
@@ -52,7 +52,7 @@ function set_admin_socket() {
 }
 
 function set_connection_signal() {
-    $connectSwitch[0].checked = !!socket.connected;
+    $connectSwitch.find('input')[0].checked = !!socket.connected;
     if (socket.connected) {
         $connectSwitchTitle.text('已连接');
         $connectSwitchTitle.removeClass('color-danger');
@@ -62,7 +62,7 @@ function set_connection_signal() {
         $connectSwitchTitle.removeClass('color-success');
         $connectSwitchTitle.addClass('color-danger');
     }
-    setTimeout("set_connection_signal()", 1000);
+    setTimeout("set_connection_signal()", 2000);
 }
 
 set_socket();
@@ -87,14 +87,17 @@ $(window).keydown(function (event) {
         sendMessage();
     }
 });
-$connectSwitch.click(function (event) {
-    var state = $connectSwitch[0].checked;
-    if (state) {
+// $(document).on('click', 'label .checkbox', function() {
+//     $connectSwitch.find('input').click();
+//   });
+$connectSwitch.find('.checkbox').on('click',function () {
+    var state = $connectSwitch.find('input')[0].checked;
+    if (!state) {
         set_socket();
-        alert('connected');
+        console.log('connected');
     } else {
         socket.disconnect();
-        alert('disconnected');
+        console.log('disconnected');
     }
 });
 
