@@ -37,6 +37,7 @@ def test_connect():
         ClientNumber += 1
         logging.debug('New User! user_id=%s Online %s' % (user_id, ClientNumber))
     Sid_User_Map[sid] = user_id
+    emit('system',{'data':'叮咚- ( ゜- ゜)つロ'},broadcast=True)
     print('connected', user_id)
 
 
@@ -52,7 +53,7 @@ def test_disconnect():
         ClientNumber -= 1
         if ClientNumber < 0: ClientNumber = 0
         logging.debug('user_id=%s disconnected. Online %s' % (user_id, ClientNumber))
-
+    emit('system',{'data':'有人走了( ´╥ω╥`)'},broadcast=True)
     print('Client disconnected')
 
 

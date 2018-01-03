@@ -6,9 +6,19 @@ var $html = $("html");
 var $connectSwitch = $('.label-switch');
 var $connectSwitchTitle = $('.m-connect-switch > .item-title');
 var $content = $('.content');
+var lastStatus = false;
+
+function addMessage($msg) {
+    $content.append($msg);
+    $content.scroller('refresh');
+    $content.scrollTop($content[0].scrollHeight);
+}
 
 function set_socket() {
     var userId = Cookies.get('user_id');
+    if(socket){
+        socket.disconnect();
+    }
     if (userId) {
         socket = io(URL + '/user', {
             query: {
@@ -36,11 +46,13 @@ function set_socket() {
             '</div>' +
             '                </div>' +
             '            </div>';
-        $content.append($msg);
-        $content.scroller('refresh');
-        $content.scrollTop($content[0].scrollHeight);
+        addMessage($msg);
         // $html.animate({scrollTop: $html.height()},200);
     });
+    socket.on('system', function (data){
+        var $msg = '<p class="text-center color-gray m-system-msg">'+data['data']+'</p>';
+        addMessage($msg);
+    })
 }
 
 function set_admin_socket() {
@@ -52,7 +64,7 @@ function set_admin_socket() {
 }
 
 function set_connection_signal() {
-    $connectSwitch.find('input')[0].checked = !!socket.connected;
+    $connectSwitch.find('input')[0].checked = socket.connected;
     if (socket.connected) {
         $connectSwitchTitle.text('已连接');
         $connectSwitchTitle.removeClass('color-danger');
@@ -62,6 +74,10 @@ function set_connection_signal() {
         $connectSwitchTitle.removeClass('color-success');
         $connectSwitchTitle.addClass('color-danger');
     }
+    if(lastStatus!==socket.connected){
+        connectToast();
+    }
+    lastStatus = socket.connected;
     setTimeout("set_connection_signal()", 2000);
 }
 
@@ -87,9 +103,13 @@ $(window).keydown(function (event) {
         sendMessage();
     }
 });
-// $(document).on('click', 'label .checkbox', function() {
-//     $connectSwitch.find('input').click();
-//   });
+function connectToast() {
+    if(socket.connected){
+        $.toast('连接成功')
+    }else {
+        $.toast('连接断开')
+    }
+}
 $connectSwitch.find('.checkbox').on('click',function () {
     var state = $connectSwitch.find('input')[0].checked;
     if (!state) {
