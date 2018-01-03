@@ -19,8 +19,16 @@
             bottom: 0;
         }
 
+        @media (min-width: 768px) {
+            .m-message-area {
+                margin-top: 60px !important;
+                /*padding: 100px 0 50px 0;*/
+            }
+        }
+
         .m-message-area {
-            padding: 100px 0 50px 0;
+            margin-top: 200px;
+            margin-bottom: 50px;
         }
 
         .m-connect-switch {
@@ -28,8 +36,8 @@
         }
 
         /*.navbar >div {*/
-            /*float: none;*/
-            /*display: inline-block;*/
+        /*float: none;*/
+        /*display: inline-block;*/
         /*}*/
         .m-user-number {
             color: orange;
@@ -58,10 +66,12 @@
                                                         data-on-text="<span class='fui-check'></span>"
                                                         data-off-text="<span class='fui-cross'></span>"/></div>
     </nav><!-- /navbar -->
-    <div class="container m-message-area">
-        <div class="alert alert-success" role="alert">...</div>
-        <div class="alert alert-info" role="alert">...</div>
-        <div class="alert alert-warning" role="alert">...</div>
+    <div class="m-message-area">
+        <div class="container">
+            <div class="alert alert-success" role="alert">...</div>
+            <div class="alert alert-info" role="alert">...</div>
+            <div class="alert alert-warning" role="alert">...</div>
+        </div>
     </div>
     <div class="input-group m-input-area" id="id_message">
         <input type="text" class="form-control" placeholder="随便说说~" id="search-query-3">

@@ -29,7 +29,7 @@ function set_socket() {
         var msg = data['data'];
         console.log('收到消息:'+ msg);
         var $msg = $('<div class="alert alert-success" role="alert">'+msg+'</div>');
-        $('.m-message-area').append($msg);
+        $('.m-message-area > .container').append($msg);
         $html.animate({scrollTop: $html.height()},200);
     });
 }
