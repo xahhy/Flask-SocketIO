@@ -11,16 +11,13 @@ function set_socket() {
     var userId = Cookies.get('user_id');
     if (userId) {
         socket = io(URL + '/user', {
-            timeout: 1000,
             query: {
                 user_id: userId
             }
         });
         $('#user_id').html(userId)
     } else {
-        socket = io(URL + '/user', {
-            timeout: 1000
-        });
+        socket = io(URL + '/user');
     }
     socket.on('user_id', function (data) {
         console.log(data['user_id']);
@@ -92,15 +89,12 @@ $(window).keydown(function (event) {
 });
 $connectSwitch.click(function (event) {
     var state = $connectSwitch[0].checked;
-    if (socket === undefined) {
-        set_socket();
-    }
     if (state) {
         set_socket();
-        console.log('connected');
+        alert('connected');
     } else {
         socket.disconnect();
-        console.log('disconnected');
+        alert('disconnected');
     }
 });
 
