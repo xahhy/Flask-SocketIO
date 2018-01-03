@@ -2,98 +2,64 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>SocketIO</title>
-    <!--<script src="js/jquery-1.11.3.min.js"></script>-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Loading Bootstrap -->
-    <link href="flat-ui/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Loading Flat UI -->
-    <link href="flat-ui/css/flat-ui.css" rel="stylesheet">
-
-    <link rel="shortcut icon" href="flat-ui/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>我的生活</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="sui/css/sm.min.css">
+    <link rel="stylesheet" href="sui/css/sm-extend.min.css">
     <style>
-        .m-input-area {
-            position: fixed;
-            bottom: 0;
-        }
-
-        @media (min-width: 768px) {
-            .m-message-area {
-                margin-top: 60px !important;
-                /*padding: 100px 0 50px 0;*/
-            }
-        }
-
-        .m-message-area {
-            margin-top: 200px;
-            margin-bottom: 50px;
-        }
-
         .m-connect-switch {
-            padding: 10px;
-        }
-
-        /*.navbar >div {*/
-        /*float: none;*/
-        /*display: inline-block;*/
-        /*}*/
-        .m-user-number {
-            color: orange;
+            line-height: 2.2rem;
         }
     </style>
 </head>
-<div>
-    <!--<h1 id="user_id"></h1>-->
-    <!--<button id="btn_connect">connect</button>-->
-    <!--<button id="btn_disconnect">disconnect</button>-->
-    <!--<button id="btn_clear_cookie">clear cookie</button>-->
-    <!--<div id="signal" class=""></div>-->
-    <nav class="navbar navbar-default navbar-fixed-top text-center" role="navigation">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
-                <span class="sr-only">Toggle navigation</span>
-            </button>
-            <a class="navbar-brand" href="#">陌陌</a>
+<body>
+<div class="page-group">
+    <!-- 你的html代码 -->
+    <div class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left" href="#" data-transition='slide-out'>
+                <span class="icon icon-home"></span>
+                陌陌
+            </a>
+            <h1 class="title"><span id="id_user_number" class="color-warning">0</span>人在线</h1>
+            <div class="pull-right m-connect-switch">
+                <div class="item-title label color-danger" style="display: inline-block">已断开</div>
+                <label class="label-switch">
+                    <input type="checkbox">
+                    <div class="checkbox"></div>
+                </label>
+            </div>
+        </header>
+
+        <div class="bar bar-footer">
+            <div id='id_message_input' class="row">
+                <div class="search-input col-85">
+                    <input type="search" placeholder='Blablabla...'/>
+                </div>
+                <a class="button button-fill button-primary col-15"><span class="icon icon-edit"></span></a>
+            </div>
         </div>
-        <div class="navbar-header text-center">
-            <p class="navbar-text">在线人数 <span class="m-user-number">0</span></p>
+        <div class="content">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-content-inner">这是一个用纯文本的简单卡片。但卡片可以包含自己的页头，页脚，列表视图，图像，和里面的任何元素。</div>
+                </div>
+            </div>
         </div>
-        <div class="m-connect-switch pull-right"><input type="checkbox" checked data-toggle="switch"
-                                                        id="id_connect_switch"
-                                                        data-on-color="success" data-off-color="danger"
-                                                        data-on-text="<span class='fui-check'></span>"
-                                                        data-off-text="<span class='fui-cross'></span>"/></div>
-    </nav><!-- /navbar -->
-    <div class="m-message-area">
-        <div class="container">
-            <div class="alert alert-success" role="alert">...</div>
-            <div class="alert alert-info" role="alert">...</div>
-            <div class="alert alert-warning" role="alert">...</div>
-        </div>
-    </div>
-    <div class="input-group m-input-area" id="id_message">
-        <input type="text" class="form-control" placeholder="随便说说~" id="search-query-3">
-        <span class="input-group-btn">
-        <button type="submit" class="btn"><span class="fui-chat"></span></button></span>
+
     </div>
 </div>
-<script src="flat-ui/js/vendor/jquery.min.js"></script>
+<script type="text/javascript" src="sui/js/zepto.min.js" charset='utf-8'></script>
+<script type="text/javascript" src="sui/js/sm.min.js" charset='utf-8'></script>
+<script type="text/javascript" src="sui/js/sm-extend.min.js" charset='utf-8'></script>
 <script src="js/socket.io.js"></script>
 <script src="js/js.cookie.min.js"></script>
-<script src="flat-ui/js/flat-ui.min.js"></script>
-
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<!--<script src="flat-ui/js/vendor/video.js"></script>-->
-<script src="js/app.js"></script>
 <script>
-    // Switches
-    if ($('[data-toggle="switch"]').length) {
-        $('[data-toggle="switch"]').bootstrapSwitch();
-    }
+    $.init();
 </script>
-<body>
-
+<script src="js/app_sui.js"></script>
 </body>
 </html>
