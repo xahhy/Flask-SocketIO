@@ -15,6 +15,7 @@ Users = {}
 Sid_User_Map = {}
 logging.basicConfig(level=logging.INFO)
 
+
 @socketio.on('connect', namespace='/user')
 def test_connect():
     global ClientNumber
@@ -25,7 +26,7 @@ def test_connect():
         sessions = Users.get(user_id)
         if not sessions:
             sessions = Users[user_id] = {sid}
-            ClientNumber += 1
+            change_client_number(True)
             logging.debug('Old User. New Connection! Online %s' % ClientNumber)
         else:
             logging.debug('Old User. Connect Again!')
@@ -34,11 +35,11 @@ def test_connect():
         user_id = str(uuid.uuid1())
         emit('user_id', {'user_id': user_id})
         Users[user_id] = {sid}
-        ClientNumber += 1
+        change_client_number(True)
         logging.debug('New User! user_id=%s Online %s' % (user_id, ClientNumber))
     Sid_User_Map[sid] = user_id
-    emit('system',{'data':'叮咚- ( ゜- ゜)つロ'},broadcast=True)
-    print('connected', user_id)
+    emit('system', {'data': '叮咚- ( ゜- ゜)つロ'}, broadcast=True)
+    print('Client Connected. User:', user_id)
 
 
 @socketio.on('disconnect', namespace='/user')
@@ -50,11 +51,9 @@ def test_disconnect():
     sessions.remove(sid)
     if not sessions:
         Users.pop(user_id)
-        ClientNumber -= 1
-        if ClientNumber < 0: ClientNumber = 0
-        logging.debug('user_id=%s disconnected. Online %s' % (user_id, ClientNumber))
-    emit('system',{'data':'有人走了( ´╥ω╥`)'},broadcast=True)
-    print('Client disconnected')
+        change_client_number(False)
+    emit('system', {'data': '有人走了( ´╥ω╥`)'}, broadcast=True)
+    print('Client disconnected. User:',user_id)
 
 
 @socketio.on('users', namespace='/admin')
@@ -67,10 +66,10 @@ def test_users():
 # def default_error_handler(e):
 #     print('Found A Error', str(e))
 @socketio.on('message', namespace='/user')
-def receive_message(json:dict):
+def receive_message(json: dict):
     message = json.get('data')
     if message:
-        emit('message',json,broadcast=True)
+        emit('message', json, broadcast=True)
 
 
 def loop():
@@ -78,6 +77,16 @@ def loop():
     while True:
         socketio.emit('users', ClientNumber, namespace='/admin')
         time.sleep(1)
+
+
+def change_client_number(increase=True):
+    global ClientNumber
+    if increase:
+        ClientNumber += 1
+    else:
+        ClientNumber -= 1
+        if ClientNumber < 0: ClientNumber = 0
+    socketio.emit('users', ClientNumber, namespace='/admin')
 
 
 @app.route('/clients')
@@ -90,4 +99,4 @@ if __name__ == '__main__':
     t = threading.Thread(target=loop)
     t.setDaemon(True)
     t.start()
-    socketio.run(app,host='0.0.0.0', debug=False)
+    socketio.run(app, host='0.0.0.0', debug=False)
